@@ -14,9 +14,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "312"
-            endingLineNumber = "312"
-            landmarkName = "CASynthesisApp::mouseUp( MouseEvent event )"
-            landmarkType = "5">
+            endingLineNumber = "312">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -30,9 +28,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "268"
-            endingLineNumber = "268"
-            landmarkName = "CASynthesisApp::nextStepGrid()"
-            landmarkType = "5">
+            endingLineNumber = "268">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -47,7 +43,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "266"
             endingLineNumber = "266"
-            landmarkName = "CASynthesisApp::nextStepGrid()"
+            landmarkName = "CASynthesisApp::mouseDown( MouseEvent event )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -63,23 +59,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "296"
             endingLineNumber = "296"
-            landmarkName = "CASynthesisApp::updateGrid(float dt)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../src/CASynthesisApp.cpp"
-            timestampString = "476012684.356373"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "Cell(ivec2 gridPoint, ci::audio::NodeRef masterNode)"
+            landmarkName = "CASynthesisApp::draw()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -95,7 +75,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "228"
             endingLineNumber = "228"
-            landmarkName = "CASynthesisApp::setup()"
+            landmarkName = "CASynthesisApp::nextStepGrid()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

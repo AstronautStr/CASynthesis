@@ -10,55 +10,67 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+class CellularGenNode : public ci::audio::GenNode
+{
+public:
+    CellularGenNode( const Format &format = Format() ) : GenNode( format )	{}
+    CellularGenNode( float freq, const Format &format = Format() ) : GenNode( freq, format ) {}
+    
+protected:
+    void process( ci::audio::Buffer *buffer ) override;
+};
+
+void CellularGenNode::process( ci::audio::Buffer *buffer )
+{
+    const auto &frameRange = getProcessFramesRange();
+    
+    float *data = buffer->getData();
+    const float samplePeriod = mSamplePeriod;
+    float phase = mPhase;
+    
+    if( mFreq.eval() )
+    {
+        const float *freqValues = mFreq.getValueArray();
+        for( size_t i = frameRange.first; i < frameRange.second; i++ )
+        {
+            data[i] = math<float>::sin( phase * float( 2 * M_PI ) );
+            phase = fract( phase + freqValues[i] * samplePeriod );
+        }
+    }
+    else
+    {
+        const float phaseIncr = mFreq.getValue() * samplePeriod;
+        for( size_t i = frameRange.first; i < frameRange.second; i++ )
+        {
+            data[i] = math<float>::sin( phase * float( 2 * M_PI ) );
+            phase = fract( phase + phaseIncr );
+        }
+    }
+    
+    mPhase = phase;
+}
+
 class Cell
 {
 protected:
     ivec2 gridPoint;
+    bool _isAlive;
     float energy;
-    float futureEnergy;
-    
+
     float baseFreq;
-    //ci::audio::GenSineNodeRef** mSineNodes;
-    ci::audio::GainNodeRef gain;
-    ci::audio::GenSineNodeRef** mSineNodes;
-    ci::audio::GainNodeRef** mGainNodes;
     float** core;
     
-public:
-    
-    bool isAlive;
-    
-    Cell(ivec2 gridPoint, ci::audio::NodeRef masterNode)
+    void _prepareCore()
     {
-        this->gridPoint = gridPoint;
-        energy = 1.0;
-        
-        baseFreq = 220.0f;
-        
-        auto ctx = audio::Context::master();
-        
-        gain = ctx->makeNode(new audio::GainNode);
-        setAlive(false);
-        gain >> masterNode;
-        
-        mSineNodes = new ci::audio::GenSineNodeRef*[CORE_SIZE];
-        mGainNodes = new ci::audio::GainNodeRef*[CORE_SIZE];
         core = new float*[CORE_SIZE];
         for (int i = 0; i < CORE_SIZE; ++i)
         {
-            mSineNodes[i] = new ci::audio::GenSineNodeRef[CORE_SIZE];
-            mGainNodes[i] = new ci::audio::GainNodeRef[CORE_SIZE];
             core[i] = new float[CORE_SIZE];
             for (int j = 0; j < CORE_SIZE; ++j)
             {
-                mSineNodes[i][j] = ctx->makeNode(new audio::GenSineNode);
-                mGainNodes[i][j] = ctx->makeNode(new audio::GainNode);
-                mSineNodes[i][j] >> mGainNodes[i][j] >> gain;
-                
                 core[i][j] = 1.0;
             }
         }
-        
         core[0][0] = 9.0;
         core[0][1] = 2.0;
         core[0][2] = 6.0;
@@ -70,18 +82,19 @@ public:
         core[2][0] = 8.0;
         core[2][1] = 4.0;
         core[2][2] = 7.0;
+    }
+    
+public:
+    
+    Cell(ivec2 gridPoint)
+    {
+        this->gridPoint = gridPoint;
+        _isAlive = false;
         
-        for (int i = 0; i < CORE_SIZE; ++i)
-        {
-            for (int j = 0; j < CORE_SIZE; ++j)
-            {
-                mSineNodes[i][j]->setFreq(baseFreq * core[i][j]);
-                mSineNodes[i][j]->enable();
-                
-                mGainNodes[i][j]->setValue(0.0);
-            }
-        }
-        mGainNodes[1][1]->setValue(1.0);
+        energy = 1.0;
+        baseFreq = 220.0f;
+        
+        _prepareCore();
     }
     
     const ivec2 getGridPoint()
@@ -89,36 +102,19 @@ public:
         return gridPoint;
     }
     
-    void setFutureEnergy(float futureEnergy)
-    {
-        //this->futureEnergy = futureEnergy;
-        this->energy = futureEnergy;
-    }
-    
-    void applyFuture()
-    {
-        this->energy = this->futureEnergy;
-        float power = getPower();
-    }
-    
     float getEnergy()
     {
         return energy;
     }
     
-    float getPower()
-    {
-        if (energy == 0)
-            return 0.0;
-        
-        return (pow(2.0, energy) * (energy - fabs(energy)) + (energy + 1) * (fabs(energy) + energy)) / (2 * energy);
-    }
-    
     void setAlive(bool alive = true)
     {
-        this->isAlive = alive;
-        float value = (float)isAlive;
-        gain->setValue(value);
+        _isAlive = alive;
+    }
+    
+    bool isAlive()
+    {
+        return _isAlive;
     }
 };
 
@@ -170,42 +166,7 @@ void CASynthesisApp::setup()
 {
     time = timeline().getCurrentTime();
     stepTime = 1.0;
-    
-    coreSize = CORE_SIZE;
-    core = new int*[coreSize];
-    for (int i = 0; i < coreSize; ++i)
-        core[i] = new int[coreSize];
-    
-    // core A3
-    /*
-    core[0][0] = 0;
-    core[0][1] = 1;
-    core[0][2] = 2;
-    
-    core[1][0] = -1;
-    core[1][1] = 0;
-    core[1][2] = 1;
-    
-    core[2][0] = -2;
-    core[2][1] = -1;
-    core[2][2] = 0;
-    */
-    
-    // core B3
-    
-     core[0][0] = 3;
-     core[0][1] = 2;
-     core[0][2] = 3;
-     
-     core[1][0] = 2;
-     core[1][1] = 0;
-     core[1][2] = 2;
-     
-     core[2][0] = 3;
-     core[2][1] = 2;
-     core[2][2] = 3;
-    
-    
+
     gridSize = 20;
     grid = new Cell**[gridSize];
     for (int i = 0; i < gridSize; ++i)
