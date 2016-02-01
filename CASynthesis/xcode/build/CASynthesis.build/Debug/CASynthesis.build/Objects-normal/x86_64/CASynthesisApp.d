@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/CASynthesisApp.cpp \
+  /Users/Astronaut/CASynthesis/CASynthesis/src/CASynthesisApp.cpp \
   ../../../cinder_0.9.0_mac/include/cinder/Timeline.h \
   ../../../cinder_0.9.0_mac/include/cinder/TimelineItem.h \
   ../../../cinder_0.9.0_mac/include/cinder/Easing.h \
