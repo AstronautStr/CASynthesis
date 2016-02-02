@@ -36,4 +36,5 @@ dependencies: \
   ../../../cinder_0.9.0_mac/include/cinder/audio/MonitorNode.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/SampleRecorderNode.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Converter.h \
-  ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Fft.h
+  ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Fft.h \
+  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp
