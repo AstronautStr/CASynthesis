@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Astronaut/CASynthesis/CASynthesis/blocks/OSC/src/OscSender.cpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/blocks/OSC/src/OscSender.cpp \
   ../blocks/OSC/src/OscSender.h ../blocks/OSC/src/OscBundle.h \
   ../blocks/OSC/src/OscMessage.h ../blocks/OSC/src/OscArg.h \
   ../blocks/OSC/src/osc/OscOutboundPacketStream.h \

@@ -1,10 +1,11 @@
 dependencies: \
-  /Users/Astronaut/CASynthesis/CASynthesis/src/CASynthesisApp.cpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/CASynthesisApp.cpp \
   ../../../cinder_0.9.0_mac/include/cinder/Timeline.h \
   ../../../cinder_0.9.0_mac/include/cinder/TimelineItem.h \
   ../../../cinder_0.9.0_mac/include/cinder/Easing.h \
   ../../../cinder_0.9.0_mac/include/cinder/Tween.h \
   ../../../cinder_0.9.0_mac/include/cinder/app/RendererGl.h \
+  ../../../cinder_0.9.0_mac/include/cinder/gl/BufferTexture.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/audio.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Buffer.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Context.h \
@@ -37,4 +38,5 @@ dependencies: \
   ../../../cinder_0.9.0_mac/include/cinder/audio/SampleRecorderNode.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Converter.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Fft.h \
-  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp
+  ../../../cinder_0.9.0_mac/include/cinder/app/cocoa/PlatformCocoa.h \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp

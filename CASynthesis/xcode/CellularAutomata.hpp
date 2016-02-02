@@ -11,19 +11,49 @@
 
 #include <stdio.h>
 
+class Cell;
+
+class CellDelegate
+{
+    friend class Cell;
+    
+protected:
+    virtual void cellStateChanged(Cell* cell) = 0;
+};
+
 class Cell
 {
     bool _isAlive;
-    bool _futureAlive;
     int _x;
     int _y;
     
+    CellDelegate* _delegate;
+    
+    void _callDelegate()
+    {
+        if (_delegate != NULL)
+            _delegate->cellStateChanged(this);
+    }
+    
 public:
-    Cell(int x, int y, bool isAlive = false)
+    Cell(int x, int y, bool alive = false, CellDelegate* delegate = NULL)
     {
         _x = x;
         _y = y;
-        _isAlive = _futureAlive = false;
+        _isAlive = alive;
+        
+        _delegate = delegate;
+        _callDelegate();
+    }
+    
+    int getX()
+    {
+        return _x;
+    }
+    
+    int getY()
+    {
+        return _y;
     }
     
     bool isAlive()
@@ -34,19 +64,16 @@ public:
     void setAlive(bool alive)
     {
         _isAlive = alive;
-        _futureAlive = alive;
+        _callDelegate();
     }
     
-    void setFutureAlive(bool alive)
+    void setDelegate(CellDelegate* delegate)
     {
-        _futureAlive = alive;
-    }
-    
-    void applyFuture()
-    {
-        _isAlive = _futureAlive;
+        _delegate = delegate;
     }
 };
+
+
 
 class Grid
 {
@@ -67,56 +94,64 @@ protected:
             return index;
     }
     
-    void _applyRule()
+    void _applyRuleRecursively(int i = 0, int j = 0)
     {
-        for (int i = 0; i < _width; ++i)
+        if (i < 0 || i >= _width || j < 0 || j >=_height)
+            return;
+        
+        Cell* currentCell = _cellsGrid[i][j];
+        bool futureState = currentCell->isAlive();
+        
+        if (currentCell != NULL)
         {
-            for (int j = 0; j < _height; ++j)
+            const int radius = 1;
+            unsigned int aliveBroCount = 0;
+            
+            for (int nx = -radius; nx <= radius; ++nx)
             {
-                Cell* currentCell = _cellsGrid[i][j];
-                if (currentCell != NULL)
+                for (int ny = -radius; ny <= radius; ++ny)
                 {
-                    const int radius = 1;
-                    unsigned int aliveBroCount = 0;
-                    
-                    for (int nx = -radius; nx <= radius; ++nx)
-                    {
-                        for (int ny = -radius; ny <= radius; ++ny)
-                        {
-                            if (_cellsGrid[_cycledIndex(i + nx, _width)][_cycledIndex(j + ny, _height)]->isAlive())
-                                aliveBroCount++;
-                        }
-                    }
-                    
-                    if (currentCell->isAlive())
-                    {
-                        if (aliveBroCount == 2 || aliveBroCount == 3)
-                        {
-                            currentCell->setFutureAlive(true);
-                        }
-                        else
-                        {
-                            currentCell->setFutureAlive(false);
-                        }
-                    }
-                    else
-                    {
-                        if (aliveBroCount == 3)
-                        {
-                            currentCell->setFutureAlive(true);
-                        }
-                    }
+                    if (_cellsGrid[_cycledIndex(i + nx, _width)][_cycledIndex(j + ny, _height)]->isAlive())
+                        aliveBroCount++;
+                }
+            }
+            
+            if (currentCell->isAlive())
+            {
+                if (aliveBroCount == 2 || aliveBroCount == 3)
+                {
+                    futureState = true;
+                }
+                else
+                {
+                    futureState = false;
+                }
+            }
+            else
+            {
+                if (aliveBroCount == 3)
+                {
+                    futureState = true;
                 }
             }
         }
         
-        for (int i = 0; i < _width; ++i)
-            for (int j = 0; j < _height; ++j)
-                _cellsGrid[i][j]->applyFuture();
+        if (j + 1 < _height)
+            _applyRuleRecursively(i, j + 1);
+        else
+        {
+            j = 0;
+            
+            if (i + 1 < _width)
+                _applyRuleRecursively(i + 1, j);
+        }
+
+        currentCell->setAlive(futureState);
+        return;
     }
     
 public:
-    Grid(int width, int height)
+    Grid(int width, int height, CellDelegate* cellObserver = NULL)
     {
         srand(time(0));
         _step = 0;
@@ -130,7 +165,7 @@ public:
             _cellsGrid[i] = new Cell*[_height];
             for (int j = 0; j < _height; ++j)
             {
-                _cellsGrid[i][j] = new Cell(i, j);
+                _cellsGrid[i][j] = new Cell(i, j, false, cellObserver);
             }
         }
     }
@@ -141,7 +176,7 @@ public:
             for (int j = 0; j < _height; ++j)
             {
                 delete _cellsGrid[i][j];
-                _cellsGrid[i][j] = nullptr;
+                _cellsGrid[i][j] = NULL;
             }
             delete [] _cellsGrid[i];
         }
@@ -183,15 +218,15 @@ public:
             for (int j = 0; j < _height; ++j)
                 if (_cellsGrid[i][j])
                 {
-                    int value = (int)((float)rand() / RAND_MAX + 0.5);
-                    _cellsGrid[i][j]->setAlive(value == 0);
+                    int value = (int)((float)rand() / RAND_MAX + 0.25);
+                    _cellsGrid[i][j]->setAlive(value == 1);
                 }
     }
     
     void advance()
     {
         _step++;
-        _applyRule();
+        _applyRuleRecursively();
     }
 };
 

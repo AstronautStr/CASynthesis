@@ -30,6 +30,8 @@
 		92E9883554E041A29817797F /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 799F973D94DB43239E40E9AE /* NetworkingUtils.cpp */; };
 		A6D50666285A41789FEC3EDE /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6FD1D0CE6F44D7CA148142B /* OscPrintReceivedElements.cpp */; };
 		A8EA62AA8E71436E8811C971 /* OscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC465B8189F84CAA90518CB2 /* OscBundle.cpp */; };
+		CF4394981C60EC6D00A621B6 /* generator.frag in Resources */ = {isa = PBXBuildFile; fileRef = CF4394961C60EC6D00A621B6 /* generator.frag */; };
+		CF4394991C60EC6D00A621B6 /* plain.vert in Resources */ = {isa = PBXBuildFile; fileRef = CF4394971C60EC6D00A621B6 /* plain.vert */; };
 		CF79FF651C5FF88B00EE8B5A /* CellularAutomata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF79FF631C5FF88B00EE8B5A /* CellularAutomata.cpp */; };
 		F1A8CF0C88644CBF9E0F6064 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBB790F9E5C42DB8B2349C6 /* OscTypes.cpp */; };
 /* End PBXBuildFile section */
@@ -79,6 +81,8 @@
 		C437CD7C5C554A5E825B6C87 /* UdpSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = ../blocks/OSC/src/ip/UdpSocket.h; sourceTree = "<group>"; };
 		C5CB279DB78A4760952A9B99 /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		C8D667F33381433A835DBD85 /* OscException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = ../blocks/OSC/src/osc/OscException.h; sourceTree = "<group>"; };
+		CF4394961C60EC6D00A621B6 /* generator.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = generator.frag; sourceTree = "<group>"; };
+		CF4394971C60EC6D00A621B6 /* plain.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = plain.vert; sourceTree = "<group>"; };
 		CF79FF631C5FF88B00EE8B5A /* CellularAutomata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularAutomata.cpp; sourceTree = "<group>"; };
 		CF79FF641C5FF88B00EE8B5A /* CellularAutomata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CellularAutomata.hpp; sourceTree = "<group>"; };
 		D6FD1D0CE6F44D7CA148142B /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscPrintReceivedElements.cpp; path = ../blocks/OSC/src/osc/OscPrintReceivedElements.cpp; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				CF4394951C60EC6D00A621B6 /* shaders */,
 				66F0914E18B44DA9A2994195 /* CASynthesisApp.cpp */,
 				CF79FF631C5FF88B00EE8B5A /* CellularAutomata.cpp */,
 				CF79FF641C5FF88B00EE8B5A /* CellularAutomata.hpp */,
@@ -270,6 +275,16 @@
 			name = ip;
 			sourceTree = "<group>";
 		};
+		CF4394951C60EC6D00A621B6 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				CF4394961C60EC6D00A621B6 /* generator.frag */,
+				CF4394971C60EC6D00A621B6 /* plain.vert */,
+			);
+			name = shaders;
+			path = ../shaders;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -322,7 +337,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF4394991C60EC6D00A621B6 /* plain.vert in Resources */,
 				34D573DFDCC843998AF0D053 /* CinderApp.icns in Resources */,
+				CF4394981C60EC6D00A621B6 /* generator.frag in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

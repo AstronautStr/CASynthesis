@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Astronaut/CASynthesis/CASynthesis/blocks/OSC/src/OscListener.cpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/blocks/OSC/src/OscListener.cpp \
   ../../../cinder_0.9.0_mac/include/cinder/Utilities.h \
   ../../../cinder_0.9.0_mac/include/boost/lexical_cast.hpp \
   ../../../cinder_0.9.0_mac/include/boost/range/iterator_range_core.hpp \
