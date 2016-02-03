@@ -25,6 +25,12 @@ void main()
     ivec2 cellCoord = ivec2(gl_FragCoord.xy / screenSize * gridSize);
     vec4 cell = texelFetch(gridSampler, int(cellCoord.x * gridWidth) + cellCoord.y);
     
+    /*vec2 cellSize = screenSize / gridSize;
+    vec2 mouse = vec2(mouseX, mouseY);
+    ivec2 mouseCellCoord = ivec2(mouse.xy / screenSize * gridSize);
+    float brushSize = length(cellSize);
+    float highlight = 1.0 - clamp(length(gl_FragCoord.xy - ((mouseCellCoord + 0.5) * cellSize)) / brushSize, 0.0, 1.0);
+    */
     float alive = cell.w;
     
     color = vec4(alive, 0.0, 0.0, alive);

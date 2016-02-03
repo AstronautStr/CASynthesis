@@ -218,7 +218,7 @@ public:
             for (int j = 0; j < _height; ++j)
                 if (_cellsGrid[i][j])
                 {
-                    int value = (int)((float)rand() / RAND_MAX + 0.25);
+                    int value = (int)((float)rand() / RAND_MAX + 0.2);
                     _cellsGrid[i][j]->setAlive(value == 1);
                 }
     }

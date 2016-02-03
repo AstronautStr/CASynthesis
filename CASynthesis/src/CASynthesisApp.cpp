@@ -104,6 +104,7 @@ public:
     
 	void mouseDown( MouseEvent event ) override;
     void mouseUp( MouseEvent event ) override;
+    void mouseMove( MouseEvent event ) override;
     void mouseDrag( MouseEvent event ) override;
     
     void keyDown( KeyEvent event ) override;
@@ -123,12 +124,12 @@ CASynthesisApp::~CASynthesisApp()
 void CASynthesisApp::setup()
 {
     time = timeline().getCurrentTime();
-    stepTime = .1;
+    stepTime = 0.1;
 
     mousePos = vec2(0, 0);
     
-    gridSize = 200;
-    const float maxHeight = 800;
+    gridSize = 40;
+    const float maxHeight = 700;
     cellSize = maxHeight / gridSize;
     _pause = true;
     
@@ -192,6 +193,11 @@ void CASynthesisApp::modifyCell(vec2 point, bool state)
 }
 
 
+void CASynthesisApp::mouseMove( MouseEvent event )
+{
+    mousePos = event.getPos();
+}
+
 void CASynthesisApp::mouseDrag( MouseEvent event )
 {
     mousePos = event.getPos();
@@ -212,7 +218,14 @@ void CASynthesisApp::mouseDown( MouseEvent event )
 
 void CASynthesisApp::mouseUp( MouseEvent event )
 {
-     modifyCell(event.getPos(), true);
+    if (event.isLeft())
+    {
+        modifyCell(event.getPos(), true);
+    }
+    else if (event.isRight())
+    {
+        modifyCell(event.getPos(), false);
+    }
 }
 
 void CASynthesisApp::update()
@@ -223,6 +236,9 @@ void CASynthesisApp::update()
     
     if (!_pause)
         updateGrid(dt);
+    
+    
+    hideCursor();
 }
 
 void CASynthesisApp::draw()
@@ -260,6 +276,26 @@ void CASynthesisApp::draw()
     glBindSampler(0, 0);
     
     mPlane->draw();
+    
+    vec2 cellRectSize = vec2((float)getWindowWidth() / gridSize, (float)getWindowHeight() / gridSize);
+    
+    ivec2 mouseCell = (ivec2)(mousePos / cellRectSize);
+    vec2 mouseCellPoint = (vec2)mouseCell * cellRectSize;
+    
+    gl::enableAdditiveBlending();
+    gl::color(1.0, 1.0, 1.0, 0.1 + 0.007 * math<float>::sin(M_PI * time * 3.0));
+    gl::drawSolidRect(Rectf(((vec2)mouseCell - vec2(1.0, 1.0)) * cellRectSize, ((vec2)mouseCell + vec2(2.0, 2.0)) * cellRectSize));
+    gl::disableBlending();
+    
+    if (grid->getCell(mouseCell.x, mouseCell.y)->isAlive())
+    {
+        gl::color(1.0, 0.4, 0.05);
+    }
+    else
+    {
+        gl::color(0.3, 0.3, 0.3);
+    }
+    gl::drawSolidRect(Rectf(mouseCellPoint, mouseCellPoint + cellRectSize));
 }
 
 CINDER_APP( CASynthesisApp, RendererGl )

@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/xcode/CellularAutomata.cpp \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp
+  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.cpp \
+  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp

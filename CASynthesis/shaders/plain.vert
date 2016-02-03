@@ -5,4 +5,5 @@ uniform mat4 ciModelViewProjection;
 
 void main()
 {
-    gl_Position = vec4(ciPosition.x, ciPosition.y, ciPosition.z, 1.0);}
+    gl_Position = vec4(ciPosition.x, ciPosition.y, ciPosition.z, 1.0);
+}
