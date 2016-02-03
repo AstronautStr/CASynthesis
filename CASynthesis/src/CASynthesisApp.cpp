@@ -27,8 +27,8 @@ protected:
     
     ObserverCellState _stateFromCellObj(Cell* cell)
     {
-        float alive = cell->isAlive() ? 1.0 : 0.0;
-        return vec4(0, 0, 0, alive);
+        //float alive = cell->isAlive() ? 1.0 : 0.0;
+        return vec4(cell->getEnergy(), cell->getFreq(), 0, 0.0);
     }
     
     virtual void cellStateChanged(Cell* cell)
@@ -74,7 +74,7 @@ public:
 class CASynthesisApp : public App
 {
 private:
-    float time;
+    float _time;
     
     float gridTime;
     float stepTime;
@@ -123,13 +123,15 @@ CASynthesisApp::~CASynthesisApp()
 
 void CASynthesisApp::setup()
 {
-    time = timeline().getCurrentTime();
+    srand(time(0));
+    
+    _time = timeline().getCurrentTime();
     stepTime = 0.1;
 
     mousePos = vec2(0, 0);
     
-    gridSize = 40;
-    const float maxHeight = 700;
+    gridSize = 20;
+    const float maxHeight = 400;
     cellSize = maxHeight / gridSize;
     _pause = true;
     
@@ -231,8 +233,8 @@ void CASynthesisApp::mouseUp( MouseEvent event )
 void CASynthesisApp::update()
 {
     float newTime = timeline().getCurrentTime();
-    float dt = newTime - time;
-    time = newTime;
+    float dt = newTime - _time;
+    _time = newTime;
     
     if (!_pause)
         updateGrid(dt);
@@ -283,7 +285,7 @@ void CASynthesisApp::draw()
     vec2 mouseCellPoint = (vec2)mouseCell * cellRectSize;
     
     gl::enableAdditiveBlending();
-    gl::color(1.0, 1.0, 1.0, 0.1 + 0.007 * math<float>::sin(M_PI * time * 3.0));
+    gl::color(1.0, 1.0, 1.0, 0.1 + 0.008 * math<float>::sin(M_PI * _time * 3.0 * (_pause ? 0.0 : 1.0)));
     gl::drawSolidRect(Rectf(((vec2)mouseCell - vec2(1.0, 1.0)) * cellRectSize, ((vec2)mouseCell + vec2(2.0, 2.0)) * cellRectSize));
     gl::disableBlending();
     

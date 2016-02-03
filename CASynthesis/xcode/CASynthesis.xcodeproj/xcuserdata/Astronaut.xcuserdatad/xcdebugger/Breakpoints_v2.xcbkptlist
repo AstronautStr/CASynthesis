@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/CASynthesisApp.cpp"
-            timestampString = "476146206.948622"
+            timestampString = "476207959.430218"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308">
+            startingLineNumber = "310"
+            endingLineNumber = "310">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/CASynthesisApp.cpp"
-            timestampString = "476143731.791226"
+            timestampString = "476207959.430218"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
             landmarkName = "CASynthesisApp::setup()"
             landmarkType = "5">
          </BreakpointContent>
@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476213456.737262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
             landmarkName = "advance()"
             landmarkType = "5">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/CASynthesisApp.cpp"
-            timestampString = "476145018.723113"
+            timestampString = "476207959.430218"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "CASynthesisApp::keyDown( KeyEvent event )"
             landmarkType = "5">
          </BreakpointContent>
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476213456.737262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
             landmarkName = "shuffle()"
             landmarkType = "5">
          </BreakpointContent>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476214807.310242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
             landmarkType = "5">
          </BreakpointContent>
@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476213456.737262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
             landmarkType = "5">
          </BreakpointContent>
@@ -120,11 +120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476214807.310242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
             landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
             landmarkType = "5">
          </BreakpointContent>
@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476119059.369361"
+            timestampString = "476213456.737262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
             landmarkType = "5">
          </BreakpointContent>
@@ -152,11 +152,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/CASynthesisApp.cpp"
-            timestampString = "476143731.791226"
+            timestampString = "476207959.430218"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "CASynthesisApp::setup()"
             landmarkType = "5">
          </BreakpointContent>
@@ -168,11 +168,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476126038.40384"
+            timestampString = "476214807.310242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "setAlive(bool alive)"
             landmarkType = "5">
          </BreakpointContent>
@@ -184,11 +184,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476126122.694484"
+            timestampString = "476213456.737262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "Grid(int width, int height, CellDelegate* cellObserver = NULL)"
             landmarkType = "5">
          </BreakpointContent>
@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476126148.676159"
+            timestampString = "476214807.310242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "Cell(int x, int y, bool alive = false, CellDelegate* delegate = NULL)"
             landmarkType = "5">
          </BreakpointContent>
@@ -216,12 +216,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CellularAutomata.hpp"
-            timestampString = "476126149.900525"
+            timestampString = "476214807.310242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
             landmarkName = "Cell(int x, int y, bool alive = false, CellDelegate* delegate = NULL)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CellularAutomata.hpp"
+            timestampString = "476213456.737262"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CellularAutomata.hpp"
+            timestampString = "476214807.310242"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "_applyRuleRecursively(int i = 0, int j = 0)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

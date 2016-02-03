@@ -9,7 +9,12 @@
 #ifndef CellularAutomata_hpp
 #define CellularAutomata_hpp
 
+#define DEATH_POWER 0.5f
+
 #include <stdio.h>
+
+float randFreq(float lowest = 20, float highest = 20000.0);
+float randFreqCentered(float center, float delta);
 
 class Cell;
 
@@ -27,6 +32,9 @@ class Cell
     int _x;
     int _y;
     
+    float _energy;
+    float _freq;
+    
     CellDelegate* _delegate;
     
     void _callDelegate()
@@ -40,10 +48,11 @@ public:
     {
         _x = x;
         _y = y;
-        _isAlive = alive;
         
+        _freq = randFreq();
         _delegate = delegate;
-        _callDelegate();
+        
+        setAlive(alive);
     }
     
     int getX()
@@ -58,13 +67,33 @@ public:
     
     bool isAlive()
     {
-        return _isAlive;
+        //return _isAlive;
+        return _energy > 0;
     }
     
     void setAlive(bool alive)
     {
-        _isAlive = alive;
+        /*if (_isAlive != alive)
+            _energy = alive ? 1.0 : 0.0;
+        
+        _isAlive = alive;*/
+        setEnergy(alive ? 1.0 : 0.0);
+    }
+    
+    float getFreq()
+    {
+        return _freq;
+    }
+    
+    void setEnergy(float energy)
+    {
+        _energy = energy;
         _callDelegate();
+    }
+    
+    float getEnergy()
+    {
+        return _energy;
     }
     
     void setDelegate(CellDelegate* delegate)
@@ -100,19 +129,33 @@ protected:
             return;
         
         Cell* currentCell = _cellsGrid[i][j];
-        bool futureState = currentCell->isAlive();
+        
+        //bool futureState = currentCell->isAlive();
+        float futureEnergy = 0;
+        float energyFlow = -DEATH_POWER;
+        float futureFreq = currentCell->getFreq();
+        
+        unsigned int aliveBroCount = 0;
         
         if (currentCell != NULL)
         {
             const int radius = 1;
-            unsigned int aliveBroCount = 0;
-            
+            float centerFreq = 0;
             for (int nx = -radius; nx <= radius; ++nx)
             {
                 for (int ny = -radius; ny <= radius; ++ny)
                 {
-                    if (_cellsGrid[_cycledIndex(i + nx, _width)][_cycledIndex(j + ny, _height)]->isAlive())
+                    Cell* bro = _cellsGrid[_cycledIndex(i + nx, _width)][_cycledIndex(j + ny, _height)];
+                    if (bro->isAlive())
+                    {
                         aliveBroCount++;
+                        
+                        float ff = ci::math<float>::max(bro->getFreq(), currentCell->getFreq()) / ci::math<float>::min(bro->getFreq(), currentCell->getFreq());
+                        float dE = 0.75 * bro->getEnergy() * (1 - (ff - (int)ff)) / (int)ff;
+                        futureEnergy += dE;
+                        
+                        centerFreq += bro->getFreq();
+                    }
                 }
             }
             
@@ -120,18 +163,23 @@ protected:
             {
                 if (aliveBroCount == 2 || aliveBroCount == 3)
                 {
-                    futureState = true;
+                    //futureState = true;
+                    //energyFlow += DEATH_POWER;
                 }
                 else
                 {
-                    futureState = false;
+                    //futureState = false;
+                    energyFlow -= DEATH_POWER;
                 }
             }
             else
             {
                 if (aliveBroCount == 3)
                 {
-                    futureState = true;
+                    //futureState = true;
+                    energyFlow = 1.0;
+                    centerFreq /= aliveBroCount;
+                    futureFreq = randFreqCentered(centerFreq, centerFreq * 0.7);
                 }
             }
         }
@@ -145,8 +193,10 @@ protected:
             if (i + 1 < _width)
                 _applyRuleRecursively(i + 1, j);
         }
-
-        currentCell->setAlive(futureState);
+        
+        currentCell->setEnergy(currentCell->getEnergy() + futureEnergy / (aliveBroCount + 1) + energyFlow);
+        //currentCell->setAlive(futureState);
+        
         return;
     }
     
