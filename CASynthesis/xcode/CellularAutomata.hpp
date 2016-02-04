@@ -9,7 +9,7 @@
 #ifndef CellularAutomata_hpp
 #define CellularAutomata_hpp
 
-#define DEATH_POWER 0.5f
+#define LIFE 1.0f
 
 #include <stdio.h>
 
@@ -100,6 +100,11 @@ public:
     {
         _delegate = delegate;
     }
+    
+    void setFreq(float newFreq)
+    {
+        _freq = newFreq;
+    }
 };
 
 
@@ -109,6 +114,7 @@ class Grid
     int _width;
     int _height;
     Cell*** _cellsGrid;
+    float _param;
     
     unsigned int _step;
     
@@ -131,8 +137,9 @@ protected:
         Cell* currentCell = _cellsGrid[i][j];
         
         //bool futureState = currentCell->isAlive();
-        float futureEnergy = 0;
-        float energyFlow = -DEATH_POWER;
+        //float futureEnergy = 0;
+        float broEnergy = 0;
+        float energyDelta = 0;
         float futureFreq = currentCell->getFreq();
         
         unsigned int aliveBroCount = 0;
@@ -140,7 +147,7 @@ protected:
         if (currentCell != NULL)
         {
             const int radius = 1;
-            float centerFreq = 0;
+            //float centerFreq = 0;
             for (int nx = -radius; nx <= radius; ++nx)
             {
                 for (int ny = -radius; ny <= radius; ++ny)
@@ -150,11 +157,13 @@ protected:
                     {
                         aliveBroCount++;
                         
-                        float ff = ci::math<float>::max(bro->getFreq(), currentCell->getFreq()) / ci::math<float>::min(bro->getFreq(), currentCell->getFreq());
-                        float dE = 0.75 * bro->getEnergy() * (1 - (ff - (int)ff)) / (int)ff;
-                        futureEnergy += dE;
                         
-                        centerFreq += bro->getFreq();
+                        float diff = cinder::math<float>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<float>::min(bro->getFreq(), currentCell->getFreq());
+                        
+                        float dE = cinder::math<float>::clamp(bro->getEnergy() / currentCell->getEnergy()) * (diff - (int)diff);
+                        broEnergy += dE;
+                        
+                        //centerFreq += bro->getFreq();
                     }
                 }
             }
@@ -168,8 +177,7 @@ protected:
                 }
                 else
                 {
-                    //futureState = false;
-                    energyFlow -= DEATH_POWER;
+                    energyDelta -= LIFE;
                 }
             }
             else
@@ -177,9 +185,9 @@ protected:
                 if (aliveBroCount == 3)
                 {
                     //futureState = true;
-                    energyFlow = 1.0;
-                    centerFreq /= aliveBroCount;
-                    futureFreq = randFreqCentered(centerFreq, centerFreq * 0.7);
+                    energyDelta += LIFE;
+                    //centerFreq /= aliveBroCount;
+                    futureFreq = randFreq();//randFreqCentered(centerFreq, centerFreq * 0.7);
                 }
             }
         }
@@ -194,7 +202,8 @@ protected:
                 _applyRuleRecursively(i + 1, j);
         }
         
-        currentCell->setEnergy(currentCell->getEnergy() + futureEnergy / (aliveBroCount + 1) + energyFlow);
+        currentCell->setFreq(futureFreq);
+        currentCell->setEnergy(currentCell->getEnergy() + energyDelta + (broEnergy / aliveBroCount) * _param);
         //currentCell->setAlive(futureState);
         
         return;
@@ -204,6 +213,7 @@ public:
     Grid(int width, int height, CellDelegate* cellObserver = NULL)
     {
         srand(time(0));
+        _param = 0;//0.00037;
         _step = 0;
         
         _width = width;
@@ -231,6 +241,16 @@ public:
             delete [] _cellsGrid[i];
         }
         delete [] _cellsGrid;
+    }
+    
+    void incParam(float delta)
+    {
+        _param += delta;
+    }
+    
+    float getParam()
+    {
+        return _param;
     }
     
     int getWidth()

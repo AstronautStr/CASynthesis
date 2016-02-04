@@ -26,7 +26,7 @@ void main()
     vec4 cell = texelFetch(gridSampler, int(cellCoord.x * gridWidth) + cellCoord.y);
     
     float alive = cell.w;
-    float freq = log(cell.y / 20000.0);
+    float freq = cell.y / 20000.0;
     float energy = cell.x;
     
     color = vec4(1.0, freq, 0.0, 1.0) * energy;

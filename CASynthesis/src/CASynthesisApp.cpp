@@ -97,6 +97,8 @@ private:
     GLuint tbo;
     GLuint tbo_tex;
     
+    float zoom;
+    
 public:
     ~CASynthesisApp();
     
@@ -129,9 +131,10 @@ void CASynthesisApp::setup()
     stepTime = 0.1;
 
     mousePos = vec2(0, 0);
+    zoom = 1;
     
-    gridSize = 20;
-    const float maxHeight = 400;
+    gridSize = 60;
+    const float maxHeight = 600;
     cellSize = maxHeight / gridSize;
     _pause = true;
     
@@ -179,6 +182,22 @@ void CASynthesisApp::keyDown( KeyEvent event )
             
         case KeyEvent::KEY_c:
             grid->reset();
+            break;
+          
+        case KeyEvent::KEY_DOWN:
+            zoom *= 10;
+            break;
+        
+        case KeyEvent::KEY_UP:
+            zoom /= 10;
+            break;
+        
+        case KeyEvent::KEY_RIGHT:
+            grid->incParam(1.0 / (float)zoom);
+            break;
+            
+        case KeyEvent::KEY_LEFT:
+            grid->incParam(-1.0 / (float)zoom);
             break;
     }
 }
@@ -298,6 +317,14 @@ void CASynthesisApp::draw()
         gl::color(0.3, 0.3, 0.3);
     }
     gl::drawSolidRect(Rectf(mouseCellPoint, mouseCellPoint + cellRectSize));
+    
+    
+    ivec2 labelPoint = ivec2(50, 50);
+    gl::color(Color(0.0, 0.0, 0.0));
+    gl::drawSolidRect(Rectf(labelPoint, (vec2)labelPoint + vec2(50, 10)));
+    gl::color(Color(1.0, 1.0, 1.0));
+    gl::drawString(to_string(grid->getParam()), labelPoint);
+    
 }
 
 CINDER_APP( CASynthesisApp, RendererGl )

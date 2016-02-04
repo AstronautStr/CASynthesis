@@ -8,6 +8,9 @@
 
 #include "CellularAutomata.hpp"
 
+#define FREQ_LOW
+#define FREQ_HIGH
+
 float randFreq(float lowest, float highest)
 {
     return lowest + highest * ((float)rand() / RAND_MAX);
