@@ -121,6 +121,9 @@ CASynthesisApp::~CASynthesisApp()
 {
     delete grid;
     delete cellsObserver;
+    
+    glDeleteBuffers(1, &tbo);
+    glDeleteTextures(1, &tbo_tex);
 }
 
 void CASynthesisApp::setup()
@@ -140,6 +143,14 @@ void CASynthesisApp::setup()
     
     cellsObserver = new ShaderCellObserver(gridSize, gridSize);
     grid = new Grid(gridSize, gridSize, cellsObserver);
+    
+    glGenBuffers(1, &tbo);
+    
+    glBindBuffer(GL_TEXTURE_BUFFER, tbo);
+    glBufferData(GL_TEXTURE_BUFFER, cellsObserver->getDataSize(), cellsObserver->getCellsDataRaw(), GL_STATIC_DRAW);
+    glBindBuffer(GL_TEXTURE_BUFFER, 0);
+    
+    glGenTextures(1, &tbo_tex);
     
     cinder::BufferRef buffer = PlatformCocoa::get()->loadResource("plain.vert")->getBuffer();
     char* shaderText = (char*)buffer->getData();
@@ -283,12 +294,8 @@ void CASynthesisApp::draw()
     
     mGlsl->uniform("gridSampler", 0);
     
-    glGenBuffers(1, &tbo);
     glBindBuffer(GL_TEXTURE_BUFFER, tbo);
-    
     glBufferData(GL_TEXTURE_BUFFER, cellsObserver->getDataSize(), cellsObserver->getCellsDataRaw(), GL_STATIC_DRAW);
-    glGenTextures(1, &tbo_tex);
-    
     glBindBuffer(GL_TEXTURE_BUFFER, 0);
     
     glActiveTexture(GL_TEXTURE0);
