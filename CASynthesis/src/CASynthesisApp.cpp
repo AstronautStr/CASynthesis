@@ -128,12 +128,12 @@ void CASynthesisApp::setup()
     srand(time(0));
     
     _time = timeline().getCurrentTime();
-    stepTime = 0.25;
+    stepTime = 0.125;
 
     mousePos = vec2(0, 0);
     zoom = 1;
     
-    gridSize = 20;
+    gridSize = 100;
     const float maxHeight = 600;
     cellSize = maxHeight / gridSize;
     _pause = true;
@@ -155,6 +155,7 @@ void CASynthesisApp::setup()
     mGlsl = gl::GlslProg::create(gl::GlslProg::Format().vertex(vert).fragment(frag));
     mPlane = gl::Batch::create(geom::Rect(Rectf(-1.0, -1.0, 1.0, 1.0)), mGlsl);
     
+    setWindowPos(320, 50);
     setWindowSize(maxHeight, maxHeight);
 }
 

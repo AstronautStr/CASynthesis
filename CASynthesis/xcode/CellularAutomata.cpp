@@ -126,15 +126,15 @@ void Grid::_applyRuleRecursively(int i, int j)
             for (int ny = -radius; ny <= radius; ++ny)
             {
                 Cell* bro = _cellsGrid[_cycledIndex(i + nx, _width)][_cycledIndex(j + ny, _height)];
-                if (bro->isAlive())
+                if ((nx != 0 || ny != 0) && bro->isAlive())
                 {
                     aliveBroCount++;
                     
                     
-                    float diff = cinder::math<float>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<float>::min(bro->getFreq(), currentCell->getFreq());
+                    float diff = bro->getFreq() / currentCell->getFreq();//cinder::math<float>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<float>::min(bro->getFreq(), currentCell->getFreq());
                     
-                    float dE = /*cinder::math<float>::clamp(bro->getEnergy() / currentCell->getEnergy()) */ (diff - (int)diff);
-                    broEnergy += dE / 2;
+                    float dE = cinder::math<float>::clamp(bro->getEnergy()) * (1.0 - (diff - (int)diff));
+                    broEnergy += dE;
                     
                     //centerFreq += bro->getFreq();
                 }
@@ -217,12 +217,12 @@ Grid::~Grid()
 
 float Grid::getLifePower()
 {
-    return 1 - _param;
+    return _param;
 }
 
 float Grid::getHarmPower()
 {
-    return _param;
+    return 1 - _param;
 }
 
 void Grid::incParam(float delta)
@@ -270,7 +270,7 @@ void Grid::shuffle()
         for (int j = 0; j < _height; ++j)
             if (_cellsGrid[i][j])
             {
-                int value = (int)((float)rand() / RAND_MAX + 0.2);
+                int value = (int)((float)rand() / RAND_MAX + 0.5);
                 _cellsGrid[i][j]->setAlive(value == 1);
             }
 }
