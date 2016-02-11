@@ -13,7 +13,13 @@
 
 float randFreq(float lowest, float highest)
 {
-    return lowest + highest * ((float)rand() / RAND_MAX);
+    //return lowest + highest * ((float)rand() / RAND_MAX);
+    return randLogFreq(lowest, highest);
+}
+
+float randLogFreq(float lowest, float highest)
+{
+    return pow(2.0, log2(lowest) + (log2(highest) - log2(lowest)) * ((double)rand() / RAND_MAX));
 }
 
 float randFreqCentered(float center, float delta)
@@ -82,8 +88,11 @@ void Cell::setEnergy(float energy)
     _energy = ci::math<float>::clamp(energy);
     if (gain != nullptr)
     {
-        //gain->setValue(_energy / 64.0);
-        gain->getParam()->appendRamp(_energy / 64.0, 0.1);
+        gain->setValue(_energy / 64.0);
+        /*if (_energy == 0)
+            gain->getParam()->appendRamp(_energy / 64.0, _host->getGenerationsTimeStep() / 8.0);
+        else*/
+         //   gain->getParam()->appendRamp(_energy / 64.0, _host->getGenerationsTimeStep());
     }
     
     _callDelegate();
@@ -106,6 +115,7 @@ void Cell::setFreq(float newFreq)
     if (osc != nullptr)
     {
         osc->setFreq(_freq);
+        //osc->getParamFreq()->appendRamp(_freq, _host->getGenerationsTimeStep() / 8.0);
     }
 }
 
@@ -151,7 +161,7 @@ void Grid::_applyRuleRecursively(int i, int j)
                     
                     float diff = cinder::math<float>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<float>::min(bro->getFreq(), currentCell->getFreq());
                     
-                    float dE = (1.0 - pow(fabs(20 * (diff - (int)diff)), 0.25));
+                    float dE = (1.0 - pow(fabs(20 * (diff - (int)diff)), 0.25)) / (int)diff;
                     broEnergy += dE / 2;
                     
                     //centerFreq += bro->getFreq();
@@ -204,12 +214,12 @@ void Grid::_applyRuleRecursively(int i, int j)
     return;
 }
 
-Grid::Grid(int width, int height, CellDelegate* cellObserver)
+Grid::Grid(int width, int height, float generationsTimeStep, CellDelegate* cellObserver)
 {
     srand(time(0));
     _param = 1.0 - DEFAULT_PARAM;
     _step = 0;
-    
+    _generationsTimeStep = generationsTimeStep;
     _width = width;
     _height = height;
     
@@ -235,6 +245,11 @@ Grid::~Grid()
         delete [] _cellsGrid[i];
     }
     delete [] _cellsGrid;
+}
+
+float Grid::getGenerationsTimeStep()
+{
+    return _generationsTimeStep;
 }
 
 float Grid::getLifePower()

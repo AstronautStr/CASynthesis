@@ -1,6 +1,6 @@
 dependencies: \
-  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.cpp \
-  /Users/Astronaut/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/xcode/CellularAutomata.cpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/xcode/CellularAutomata.hpp \
   ../../../cinder_0.9.0_mac/include/cinder/audio/audio.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Buffer.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Context.h \

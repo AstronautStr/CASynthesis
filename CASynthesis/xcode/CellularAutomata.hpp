@@ -16,6 +16,7 @@
 #include "cinder/audio/audio.h"
 
 float randFreq(float lowest = 20, float highest = 20000.0);
+float randLogFreq(float lowest = 20, float highest = 20000.0);
 float randFreqCentered(float center, float delta);
 
 class Cell;
@@ -75,13 +76,14 @@ class Grid
     
     unsigned int _step;
     float _param;
+    float _generationsTimeStep;
     
 protected:
     int _cycledIndex(int index, int length);
     void _applyRuleRecursively(int i = 0, int j = 0);
     
 public:
-    Grid(int width, int height, CellDelegate* cellObserver = NULL);
+    Grid(int width, int height, float generationsTimeStep, CellDelegate* cellObserver = NULL);
     ~Grid();
     
     float getLifePower();
@@ -92,6 +94,8 @@ public:
     
     int getWidth();
     int getHeight();
+    
+    float getGenerationsTimeStep();
     
     Cell* getCell(int x, int y);
     Cell* setCellAlive(int x, int y, bool alive = true);

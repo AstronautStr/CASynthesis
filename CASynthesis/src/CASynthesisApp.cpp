@@ -128,7 +128,7 @@ void CASynthesisApp::setup()
     srand(time(0));
     
     _time = timeline().getCurrentTime();
-    stepTime = 0.1;
+    stepTime = 0.25;
 
     mousePos = vec2(0, 0);
     zoom = 1;
@@ -139,7 +139,7 @@ void CASynthesisApp::setup()
     _pause = true;
     
     cellsObserver = new ShaderCellObserver(gridSize, gridSize);
-    grid = new Grid(gridSize, gridSize, cellsObserver);
+    grid = new Grid(gridSize, gridSize, stepTime, cellsObserver);
     
     glGenBuffers(1, &tbo);
     glGenTextures(1, &tbo_tex);
