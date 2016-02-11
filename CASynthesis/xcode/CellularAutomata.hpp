@@ -13,6 +13,8 @@
 
 #include <stdio.h>
 
+#include "cinder/audio/audio.h"
+
 float randFreq(float lowest = 20, float highest = 20000.0);
 float randFreqCentered(float center, float delta);
 
@@ -39,6 +41,9 @@ class Cell
     Grid* _host;
     
     CellDelegate* _delegate;
+    
+    ci::audio::GenSineNodeRef osc;
+    ci::audio::GainNodeRef gain;
     
     void _callDelegate();
     

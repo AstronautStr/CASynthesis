@@ -128,12 +128,12 @@ void CASynthesisApp::setup()
     srand(time(0));
     
     _time = timeline().getCurrentTime();
-    stepTime = 0.125;
+    stepTime = 0.1;
 
     mousePos = vec2(0, 0);
     zoom = 1;
     
-    gridSize = 100;
+    gridSize = 8;
     const float maxHeight = 600;
     cellSize = maxHeight / gridSize;
     _pause = true;
@@ -157,6 +157,9 @@ void CASynthesisApp::setup()
     
     setWindowPos(320, 50);
     setWindowSize(maxHeight, maxHeight);
+    
+    audio::master()->getOutput()->enableClipDetection(false);
+    audio::master()->getOutput()->enable();
 }
 
 
