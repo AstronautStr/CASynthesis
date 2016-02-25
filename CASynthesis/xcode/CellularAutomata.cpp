@@ -88,11 +88,11 @@ void Cell::setEnergy(float energy)
     _energy = ci::math<float>::clamp(energy);
     if (gain != nullptr)
     {
-        gain->setValue(_energy / 64.0);
+        //gain->setValue(_energy / 64.0);
         /*if (_energy == 0)
             gain->getParam()->appendRamp(_energy / 64.0, _host->getGenerationsTimeStep() / 8.0);
         else*/
-         //   gain->getParam()->appendRamp(_energy / 64.0, _host->getGenerationsTimeStep());
+            gain->getParam()->appendRamp(_energy / 400.0, _host->getGenerationsTimeStep());
     }
     
     _callDelegate();
@@ -159,9 +159,18 @@ void Grid::_applyRuleRecursively(int i, int j)
                     aliveBroCount++;
                     
                     
-                    float diff = cinder::math<float>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<float>::min(bro->getFreq(), currentCell->getFreq());
+                    double diff = cinder::math<double>::max(bro->getFreq(), currentCell->getFreq()) / cinder::math<double>::min(bro->getFreq(), currentCell->getFreq());
+                    
+                    //diff = ci::math<double>::clamp(diff, 0.0, 2.0);
                     
                     float dE = (1.0 - pow(fabs(20 * (diff - (int)diff)), 0.25)) / (int)diff;
+                    /*const double K = 4;
+                    const double l = 0.1;
+                    double sum = 0.0;
+                    for (int i = 0; i < K - 1; ++i)
+                        sum += 1.0 - ci::math<double>::abs(ci::math<double>::sin(ci::math<double>::pow(2.0, i) * M_PI * diff));
+                    double dE = (1.0 / K) * (ci::math<double>::floor(K * diff + l) - ci::math<double>::floor(K * diff - l)) * ci::math<double>::abs(ci::math<double>::cos(K * K * M_PI * diff)) * sum;
+                    */
                     broEnergy += dE / 2;
                     
                     //centerFreq += bro->getFreq();
@@ -171,12 +180,7 @@ void Grid::_applyRuleRecursively(int i, int j)
         
         if (currentCell->isAlive())
         {
-            if (aliveBroCount == 2 || aliveBroCount == 3)
-            {
-                //futureState = true;
-                //energyFlow += DEATH_POWER;
-            }
-            else
+            if (aliveBroCount != 2 && aliveBroCount != 3)
             {
                 energyDelta -= getLifePower();
             }
@@ -206,7 +210,7 @@ void Grid::_applyRuleRecursively(int i, int j)
     currentCell->setFreq(futureFreq);
     float a = currentCell->getEnergy() + energyDelta;
     if (aliveBroCount != 0)
-        a += (broEnergy / aliveBroCount) * getHarmPower();
+        a += broEnergy / aliveBroCount * getHarmPower();
     
     currentCell->setEnergy(a);
     //currentCell->setAlive(futureState);
@@ -217,7 +221,7 @@ void Grid::_applyRuleRecursively(int i, int j)
 Grid::Grid(int width, int height, float generationsTimeStep, CellDelegate* cellObserver)
 {
     srand(time(0));
-    _param = 1.0 - DEFAULT_PARAM;
+    _param = 0;//1.0 - DEFAULT_PARAM;
     _step = 0;
     _generationsTimeStep = generationsTimeStep;
     _width = width;
@@ -254,7 +258,7 @@ float Grid::getGenerationsTimeStep()
 
 float Grid::getLifePower()
 {
-    return 1 -_param;
+    return 1.0f - _param;
 }
 
 float Grid::getHarmPower()
