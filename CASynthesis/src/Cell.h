@@ -73,10 +73,10 @@ protected:
     audio::GenSineNodeRef osc;
     audio::GainNodeRef gain;
     
-    void init(ivec2 position, double cellsCount, double freq, double amp);
+    void init(ivec2 position, double cellsCount, double freq, double amp, ci::audio::NodeRef masterNode);
 public:
-    Cell(ivec2 position, double cellsCount);
-    Cell(ivec2 position, double cellsCount, double freq);
+    Cell(ivec2 position, double cellsCount, ci::audio::NodeRef masterNode);
+    Cell(ivec2 position, double cellsCount, double freq, ci::audio::NodeRef masterNode);
     
     CellPresentation& getPresentation();
     

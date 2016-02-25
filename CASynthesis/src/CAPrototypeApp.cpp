@@ -73,6 +73,10 @@ void CAPrototypeApp::setup()
     
     mSoundEnabled = false;
     
+    audio::NodeRef master = audio::master()->getOutput();
+    audio::master()->getOutput()->enableClipDetection(false);
+    audio::master()->getOutput()->enable();
+    
     double cellsCount = mGridSize * mGridSize;
     mGrid = new Cell**[mGridSize];
     for (int i = 0; i < mGridSize; ++i)
@@ -80,7 +84,7 @@ void CAPrototypeApp::setup()
         mGrid[i] = new Cell*[mGridSize];
         for (int j = 0; j < mGridSize; ++j)
         {
-            mGrid[i][j] = new Cell(ivec2(i, j), cellsCount);
+            mGrid[i][j] = new Cell(ivec2(i, j), cellsCount, master);
             
             mGrid[i][j]->setAmp(0.0);
             mGrid[i][j]->setFreq(0.0);
@@ -103,8 +107,7 @@ void CAPrototypeApp::setup()
     setWindowPos(x, y);
     setWindowSize(width, height);
     
-    audio::master()->getOutput()->enableClipDetection(false);
-    audio::master()->getOutput()->enable();
+
 }
 CAPrototypeApp::~CAPrototypeApp()
 {
@@ -182,6 +185,7 @@ void CAPrototypeApp::applyStepRule()
             double harmAmp = 0.0;
             double broAmp = 0.0;
             
+            // remember that this "- mLifePower" makes cells die each step if it have not bros"
             double nextAmp = cell->getAmp() - mLifePower;
             
             for (int ni = -mRuleRadius; ni <= mRuleRadius; ++ni)
@@ -205,20 +209,13 @@ void CAPrototypeApp::applyStepRule()
                     for (int i = 0; i < K - 1; ++i)
                         sum += 1.0 - ci::math<double>::abs(ci::math<double>::sin(ci::math<double>::pow(2.0, i) * M_PI * diff));
                     
-                    double dE = (1.0 / K) * (ci::math<double>::floor(K * diff + l) - ci::math<double>::floor(K * diff - l)) * ci::math<double>::abs(ci::math<double>::cos((1.0 / (10.0 * l)) * K * K * M_PI * diff)) * sum * diff;
+                    double dE = (1.0 / K) * (ci::math<double>::floor(K * diff + l) - ci::math<double>::floor(K * diff - l)) * ci::math<double>::abs(ci::math<double>::cos((1.0 / (10.0 * l)) * K * K * M_PI * diff)) * sum;
                     
                     harmAmp += dE * (bro->getAmp() > 0 ? 1.0 : 0.0);
                 }
             }
             
-            if (cell->isAlive())
-            {
-                if (broAmp < lifePower * 2.0 || broAmp > lifePower * 3.0)
-                {
-               //     nextAmp -= lifePower;
-                }
-            }
-            else
+            if (!cell->isAlive())
             {
                 if (broAmp >= lifePower * 1)
                 {

@@ -58,7 +58,7 @@ void CellPresentation::update(float dt)
     mSelectionAlpha = ci::math<float>::clamp(mSelectionAlpha);
 }
 
-void Cell::init(ivec2 position, double cellsCount, double freq, double amp)
+void Cell::init(ivec2 position, double cellsCount, double freq, double amp, ci::audio::NodeRef masterNode)
 {
     mPresentation = CellPresentation(this);
     
@@ -68,7 +68,7 @@ void Cell::init(ivec2 position, double cellsCount, double freq, double amp)
     pan->setPos((float)rand() / RAND_MAX);
     pan->enable();
     osc->enable();
-    osc >> gain >> pan >> ci::audio::master()->getOutput();
+    osc >> gain >> pan >> masterNode;
     
     mCellsCount = cellsCount;
     
@@ -78,13 +78,13 @@ void Cell::init(ivec2 position, double cellsCount, double freq, double amp)
     setBase(1.0);
     resetNext();
 }
-Cell::Cell(ivec2 position, double cellsCount)
+Cell::Cell(ivec2 position, double cellsCount, ci::audio::NodeRef masterNode)
 {
-    init(position, cellsCount, 0, 0);
+    init(position, cellsCount, 0, 0, masterNode);
 }
-Cell::Cell(ivec2 position, double cellsCount, double freq)
+Cell::Cell(ivec2 position, double cellsCount, double freq, ci::audio::NodeRef masterNode)
 {
-    init(position, cellsCount, freq, 1.0);
+    init(position, cellsCount, freq, 1.0, masterNode);
 }
 
 CellPresentation& Cell::getPresentation()

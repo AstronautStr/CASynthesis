@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Astronaut/CASynthesis/CASynthesis/blocks/OSC/src/ip/posix/UdpSocket.cpp \
+  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/blocks/OSC/src/ip/posix/UdpSocket.cpp \
   ../blocks/OSC/src/ip/UdpSocket.h \
   ../blocks/OSC/src/ip/NetworkingUtils.h \
   ../blocks/OSC/src/ip/IpEndpointName.h \
