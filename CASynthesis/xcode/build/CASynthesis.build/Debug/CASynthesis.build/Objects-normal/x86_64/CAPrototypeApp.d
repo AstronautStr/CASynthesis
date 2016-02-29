@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/CAPrototypeApp.cpp \
+  /Users/Astronaut/CASynthesis/CASynthesis/src/CAPrototypeApp.cpp \
   ../../../cinder_0.9.0_mac/include/cinder/app/RendererGl.h \
   ../../../cinder_0.9.0_mac/include/cinder/Utilities.h \
   ../../../cinder_0.9.0_mac/include/boost/lexical_cast.hpp \
@@ -364,4 +364,4 @@ dependencies: \
   ../../../cinder_0.9.0_mac/include/cinder/audio/SampleRecorderNode.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Converter.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/dsp/Fft.h \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/Cell.h
+  /Users/Astronaut/CASynthesis/CASynthesis/src/Cell.h

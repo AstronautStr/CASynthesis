@@ -11,6 +11,8 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+#define dmath cinder::math<double>
+
 int cycledIndex(int index, int length)
 {
     if (index < 0)
@@ -146,7 +148,8 @@ void CAPrototypeApp::shuffle()
         {
             float life = ((float)rand() / RAND_MAX) > 0.5 ? mLifePower : 0.0;
             mGrid[i][j]->setAmp(life);
-            mGrid[i][j]->randFreq();
+            mGrid[i][j]->setFreq(50.0 * (1 + rand() % 10));
+            //mGrid[i][j]->randFreq();
         }
     }
 }
@@ -157,7 +160,7 @@ void CAPrototypeApp::clear()
         for (int j = 0; j < mGridSize; ++j)
         {
             mGrid[i][j]->setAmp(0.0);
-            mGrid[i][j]->setFreq(0.0);
+            mGrid[i][j]->setFreq(mGrid[0][0]->getFreq());
         }
     }
 }
@@ -186,8 +189,10 @@ void CAPrototypeApp::applyStepRule()
             double broAmp = 0.0;
             
             // remember that this "- mLifePower" makes cells die each step if it have not bros"
-            double nextAmp = cell->getAmp() - mLifePower;
+            const double noisePower = lifePower;
+            double nextAmp = cell->getAmp();// - noisePower;
             
+            double midFreq = cell->getFreq();
             for (int ni = -mRuleRadius; ni <= mRuleRadius; ++ni)
             {
                 for (int nj = -mRuleRadius; nj <= mRuleRadius; ++nj)
@@ -196,41 +201,56 @@ void CAPrototypeApp::applyStepRule()
                         continue;
                     
                     Cell* bro = mGrid[cycledIndex(i + ni, mGridSize)][cycledIndex(j + nj, mGridSize)];
-                    broAmp += bro->getAmp();
                     
                     if (bro->getFreq() == 0 || cell->getFreq() == 0)
                         continue;
                     
-                    double diff = cinder::math<double>::max(bro->getFreq(), cell->getFreq()) / cinder::math<double>::min(bro->getFreq(), cell->getFreq());
+                    double currentBroAmp = bro->getAmp() > 0 ? 1.0 : 0.0;
+                    broAmp += currentBroAmp;
+                    midFreq += bro->getFreq() * currentBroAmp;
+                    
+                    double diff = cinder::math<double>::max(bro->getFreq(), 50.0) / cinder::math<double>::min(bro->getFreq(), 50.0);
                     
                     const double K = 2;
-                    const double l = 0.01;
-                    double sum = 0.0;
-                    for (int i = 0; i < K - 1; ++i)
-                        sum += 1.0 - ci::math<double>::abs(ci::math<double>::sin(ci::math<double>::pow(2.0, i) * M_PI * diff));
+                    const int p = 1;
                     
-                    double dE = (1.0 / K) * (ci::math<double>::floor(K * diff + l) - ci::math<double>::floor(K * diff - l)) * ci::math<double>::abs(ci::math<double>::cos((1.0 / (10.0 * l)) * K * K * M_PI * diff)) * sum;
-                    
-                    harmAmp += dE * (bro->getAmp() > 0 ? 1.0 : 0.0);
+                    double dE = 2 * (dmath::pow(2 * (K * diff - dmath::floor(K * diff) - 0.5), 2 * p) - 0.5);
+                    harmAmp += dE * currentBroAmp;//bro->getAmp() / cell->getAmp();
                 }
             }
+            
+            
+            std::cerr << harmAmp << " " << cell->getGridPosition().x << " " << cell->getGridPosition().y << std::endl;
+            
             
             if (!cell->isAlive())
             {
-                if (broAmp >= lifePower * 1)
+                if (harmAmp > 2.9 && harmAmp < 3.1)
                 {
                     nextAmp += lifePower;
-                    cell->randFreq(true);
+                    cell->setNextFreq(50.0 * (1 + rand() % 10));
+                    //cell->randFreq(true);
+                }
+            }
+            else
+            {
+                if (harmAmp < 2.0 || harmAmp > 3.0)
+                {
+                    nextAmp -= lifePower;
+                    cell->setNextFreq(50.0 * (1 + rand() % 10));
+                    //cell->randFreq(true);
                 }
             }
             
-            cell->setNextAmp(nextAmp + harmAmp);
+            cell->setNextAmp(nextAmp);
         }
     }
     
     for (int i = 0; i < mGridSize; ++i)
         for (int j = 0; j < mGridSize; ++j)
             mGrid[i][j]->applyNext();
+    
+    mStepTimer = 0;
 }
 
 void CAPrototypeApp::keyDown( KeyEvent event )
@@ -392,14 +412,13 @@ void CAPrototypeApp::update()
     }
     
     mStepTimer += dt;
-    if (mStepTimer >= 0.05)
+    if (mStepTimer >= 0.5)
     {
-        mStepTimer = 0.05;
+        mStepTimer = 0.5;
     
         if (mSoundEnabled)
         {
             applyStepRule();
-            mStepTimer = 0;
         }
     }
 }

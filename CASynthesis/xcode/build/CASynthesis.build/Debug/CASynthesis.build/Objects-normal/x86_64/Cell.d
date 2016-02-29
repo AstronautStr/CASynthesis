@@ -1,6 +1,5 @@
-dependencies: \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/Cell.cpp \
-  /Users/Astronaut/Documents/Astronaut-git/CASynthesis/CASynthesis/src/Cell.h \
+dependencies: /Users/Astronaut/CASynthesis/CASynthesis/src/Cell.cpp \
+  /Users/Astronaut/CASynthesis/CASynthesis/src/Cell.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/audio.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Buffer.h \
   ../../../cinder_0.9.0_mac/include/cinder/audio/Context.h \

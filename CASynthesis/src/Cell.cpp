@@ -8,6 +8,8 @@
 
 #include "Cell.h"
 
+#define RAMP 0.5
+
 CellPresentation::CellPresentation()
 {
     mHost = NULL;
@@ -39,7 +41,7 @@ Color CellPresentation::getColor()
 {
     if (mHost != NULL)
     {
-        float amp = mHost->getAmp() * 0.1;
+        float amp = 0.5 * (mHost->getAmp() > 0 ? 1.0 : 0.0);
         return Color(amp, amp, amp);
     }
     else
@@ -106,7 +108,10 @@ void Cell::setAmp(double amp)
     mAmp = ci::math<double>::clamp(amp);
     
     if (gain != nullptr)
-        gain->getParam()->applyRamp(mAmp / mCellsCount, 0.05);
+    {
+        gain->getParam()->applyRamp(0.0, 0.05);
+        gain->getParam()->applyRamp(mAmp / mCellsCount, RAMP);
+    }
 }
 void Cell::setNextAmp(double amp)
 {
