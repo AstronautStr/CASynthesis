@@ -67,32 +67,45 @@ protected:
     double mNextAmp;
     double mAmp;
     double mCellsCount;
+    int mState;
     
     CellPresentation mPresentation;
     
     audio::GenSineNodeRef osc;
     audio::GainNodeRef gain;
     
+    audio::GenSineNodeRef* _oscArray;
+    audio::GainNodeRef* _gainArray;
+    
+    unsigned int oscCounter;
+    unsigned int oscSize;
+    
+    void updateActiveOsc();
+    void updateFreq(bool swapOsc = false);
+    void setGainValue(double gainValue, bool fade = true, bool reset = false);
+    
     void init(ivec2 position, double cellsCount, double freq, double amp, ci::audio::NodeRef masterNode);
 public:
     Cell(ivec2 position, double cellsCount, ci::audio::NodeRef masterNode);
     Cell(ivec2 position, double cellsCount, double freq, ci::audio::NodeRef masterNode);
+    ~Cell();
     
     CellPresentation& getPresentation();
     
     bool isAlive();
     
     double getAmp();
-    void setAmp(double amp);
     void setNextAmp(double amp);
     
     void randFreq(bool next = false, float lowest = 20, float highest = 20000.0);
+    
     double getFreq();
-    void setFreq(double freq);
     void setNextFreq(double freq);
     
-    void setBase(double base);
-    void updateFreq();
+    
+    void setAmp(double amp, bool fade = true);
+    void setFreq(double freq, bool crossfade = true);
+    void setBase(double freq);
     
     void applyNext();
     void resetNext();

@@ -7,8 +7,7 @@
 //
 
 #include "Cell.h"
-
-#define RAMP 0.5
+#include "Defines.h"
 
 CellPresentation::CellPresentation()
 {
@@ -64,20 +63,34 @@ void Cell::init(ivec2 position, double cellsCount, double freq, double amp, ci::
 {
     mPresentation = CellPresentation(this);
     
-    osc = ci::audio::master()->makeNode(new ci::audio::GenSineNode);
-    gain = ci::audio::master()->makeNode(new ci::audio::GainNode);
     ci::audio::Pan2dNodeRef pan = ci::audio::master()->makeNode(new ci::audio::Pan2dNode);
     pan->setPos((float)rand() / RAND_MAX);
     pan->enable();
-    osc->enable();
-    osc >> gain >> pan >> masterNode;
+    
+    oscSize = 2;
+    _oscArray = new ci::audio::GenSineNodeRef[oscSize];
+    _gainArray = new ci::audio::GainNodeRef[oscSize];
+    for (int i = 0; i < oscSize; ++i)
+    {
+        osc = _oscArray[i] = ci::audio::master()->makeNode(new ci::audio::GenSineNode);
+        gain = _gainArray[i] = ci::audio::master()->makeNode(new ci::audio::GainNode);
+        
+        osc->enable();
+        osc >> gain >> pan >> masterNode;
+    }
+    
+    oscCounter = 0;
+    updateActiveOsc();
     
     mCellsCount = cellsCount;
     
     mGridPosition = position;
-    setFreq(freq);
-    setAmp(amp);
+    setFreq(freq, false);
     setBase(1.0);
+    setAmp(amp, false);
+    
+    mState = rand() % 16;
+    
     resetNext();
 }
 Cell::Cell(ivec2 position, double cellsCount, ci::audio::NodeRef masterNode)
@@ -87,6 +100,17 @@ Cell::Cell(ivec2 position, double cellsCount, ci::audio::NodeRef masterNode)
 Cell::Cell(ivec2 position, double cellsCount, double freq, ci::audio::NodeRef masterNode)
 {
     init(position, cellsCount, freq, 1.0, masterNode);
+}
+Cell::~Cell()
+{
+    delete [] _oscArray;
+    delete [] _gainArray;
+}
+
+void Cell::updateActiveOsc()
+{
+    osc = _oscArray[oscCounter % oscSize];
+    gain = _gainArray[oscCounter % oscSize];
 }
 
 CellPresentation& Cell::getPresentation()
@@ -103,14 +127,23 @@ double Cell::getAmp()
 {
     return mAmp;
 }
-void Cell::setAmp(double amp)
+void Cell::setAmp(double amp, bool fade)
 {
     mAmp = ci::math<double>::clamp(amp);
     
+    setGainValue(mAmp, fade);
+}
+void Cell::setGainValue(double gainValue, bool fade, bool reset)
+{
     if (gain != nullptr)
     {
-        gain->getParam()->applyRamp(0.0, 0.05);
-        gain->getParam()->applyRamp(mAmp / mCellsCount, RAMP);
+        if (reset)
+            gain->getParam()->setValue(0.0);
+        
+        if (fade)
+            gain->getParam()->applyRamp(gainValue / mCellsCount, ATTACK_TIME);
+        else
+            gain->setValue(gainValue / mCellsCount);
     }
 }
 void Cell::setNextAmp(double amp)
@@ -143,26 +176,36 @@ double Cell::getFreq()
 {
     return mFreq;
 }
-void Cell::setFreq(double freq)
+void Cell::setFreq(double freq, bool crossfade)
 {
+    crossfade = crossfade && (mFreq != freq);
     mFreq = freq;
     
-    updateFreq();
+    updateFreq(crossfade);
 }
 
 void Cell::setBase(double base)
 {
+    if (base == mBase)
+        return;
+    
     mBase = base;
     
-    updateFreq();
+    updateFreq(false);
 }
 
-void Cell::updateFreq()
+void Cell::updateFreq(bool swapOsc)
 {
     if (osc != nullptr)
     {
-        //osc->setFreq(mFreq * mBase);
-        osc->getParamFreq()->applyRamp((mFreq * mBase), 0.05);
+        if (swapOsc)
+        {
+            setGainValue(0.0);
+            oscCounter++;
+            updateActiveOsc();
+            setGainValue(1.0, true, true);
+        }
+        osc->getParamFreq()->setValue(mBase * mFreq);
     }
 }
 

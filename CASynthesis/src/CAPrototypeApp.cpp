@@ -6,11 +6,13 @@
 #include "cinder/audio/audio.h"
 
 #include "Cell.h"
+#include "Defines.h"
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+#define RULE_VALUES_COUNT 4
 #define dmath cinder::math<double>
 
 int cycledIndex(int index, int length)
@@ -31,11 +33,15 @@ protected:
     float mTime;
     
     double zoom;
+    int selector;
+    
     bool mSoundEnabled;
     double mBase;
     double mStepTimer;
     
     int mRuleRadius;
+    double mRuleValues[RULE_VALUES_COUNT];
+    
     int mGridSize;
     double mLifePower;
     Cell*** mGrid;
@@ -67,8 +73,15 @@ void CAPrototypeApp::setup()
     mLifePower = 1.0;
     mTime = 0;
     mRuleRadius = 1;
-    mGridSize = 8;
+    mGridSize = 10;
+    
     zoom = 1.0;
+    selector = 0;
+    
+    mRuleValues[0] = 2.0;
+    mRuleValues[1] = 3.0;
+    mRuleValues[2] = 2.9;
+    mRuleValues[3] = 3.1;
     
     mBase = 1.0;
     mStepTimer = 0.0;
@@ -148,7 +161,7 @@ void CAPrototypeApp::shuffle()
         {
             float life = ((float)rand() / RAND_MAX) > 0.5 ? mLifePower : 0.0;
             mGrid[i][j]->setAmp(life);
-            mGrid[i][j]->setFreq(50.0 * (1 + rand() % 10));
+            mGrid[i][j]->setFreq(BASE_FREQ * (1 + rand() % HARMONIX_MAX));
             //mGrid[i][j]->randFreq();
         }
     }
@@ -209,7 +222,7 @@ void CAPrototypeApp::applyStepRule()
                     broAmp += currentBroAmp;
                     midFreq += bro->getFreq() * currentBroAmp;
                     
-                    double diff = cinder::math<double>::max(bro->getFreq(), 50.0) / cinder::math<double>::min(bro->getFreq(), 50.0);
+                    double diff = cinder::math<double>::max(bro->getFreq(), BASE_FREQ) / cinder::math<double>::min(bro->getFreq(), BASE_FREQ);
                     
                     const double K = 2;
                     const int p = 1;
@@ -225,19 +238,19 @@ void CAPrototypeApp::applyStepRule()
             
             if (!cell->isAlive())
             {
-                if (harmAmp > 2.9 && harmAmp < 3.1)
+                if (harmAmp > mRuleValues[2] && harmAmp < mRuleValues[3])
                 {
                     nextAmp += lifePower;
-                    cell->setNextFreq(50.0 * (1 + rand() % 10));
+                    cell->setNextFreq(BASE_FREQ * ((1 + rand() % HARMONIX_MAX)) );
                     //cell->randFreq(true);
                 }
             }
             else
             {
-                if (harmAmp < 2.0 || harmAmp > 3.0)
+                if (harmAmp < mRuleValues[0] || harmAmp > mRuleValues[1])
                 {
                     nextAmp -= lifePower;
-                    cell->setNextFreq(50.0 * (1 + rand() % 10));
+                    cell->setNextFreq(BASE_FREQ * ((1 + rand() % HARMONIX_MAX)) );
                     //cell->randFreq(true);
                 }
             }
@@ -272,12 +285,18 @@ void CAPrototypeApp::keyDown( KeyEvent event )
             shuffle();
             break;
             
+        case KeyEvent::KEY_TAB:
+            selector = (selector + 1) % RULE_VALUES_COUNT;
+            break;
+            
         case KeyEvent::KEY_DOWN:
-            cell->setFreq(cell->getFreq() + -1.0 / zoom);
+            //cell->setFreq(cell->getFreq() + -1.0 / zoom);
+            mRuleValues[selector] -= 1.0 / zoom;
             break;
             
         case KeyEvent::KEY_UP:
-            cell->setFreq(cell->getFreq() + 1.0 / zoom);
+            //cell->setFreq(cell->getFreq() + 1.0 / zoom);
+            mRuleValues[selector] += 1.0 / zoom;
             break;
             
         case KeyEvent::KEY_RIGHT:
@@ -412,9 +431,9 @@ void CAPrototypeApp::update()
     }
     
     mStepTimer += dt;
-    if (mStepTimer >= 0.5)
+    if (mStepTimer >= STEP_TIME)
     {
-        mStepTimer = 0.5;
+        mStepTimer = STEP_TIME;
     
         if (mSoundEnabled)
         {
@@ -433,6 +452,11 @@ void CAPrototypeApp::draw()
         {
             drawCell(mGrid[i][j]);
         }
+    }
+    
+    for (int i = 0; i < RULE_VALUES_COUNT; ++i)
+    {
+        gl::drawString(toString(mRuleValues[i]), vec2(5, 5) + vec2(0 * i, 20 * i), ColorA(1.0, 1.0, 1.0, dmath::sin((0.25 + (i == selector ? 1.0 : 0.0) * timeline().getCurrentTime()) * 2 * M_PI)), mFont);
     }
 }
 

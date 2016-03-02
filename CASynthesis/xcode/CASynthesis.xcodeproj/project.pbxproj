@@ -78,6 +78,7 @@
 		C437CD7C5C554A5E825B6C87 /* UdpSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = ../blocks/OSC/src/ip/UdpSocket.h; sourceTree = "<group>"; };
 		C5CB279DB78A4760952A9B99 /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		C8D667F33381433A835DBD85 /* OscException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = ../blocks/OSC/src/osc/OscException.h; sourceTree = "<group>"; };
+		CF69DAEB1C850A1B00CD0591 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		CFFB6FB01C7F016500A062BA /* CAPrototypeApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAPrototypeApp.cpp; path = ../src/CAPrototypeApp.cpp; sourceTree = "<group>"; };
 		CFFB6FB11C7F016500A062BA /* Cell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cell.cpp; path = ../src/Cell.cpp; sourceTree = "<group>"; };
 		CFFB6FB21C7F016500A062BA /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cell.h; path = ../src/Cell.h; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				CF69DAEB1C850A1B00CD0591 /* Defines.h */,
 				07A406419F29492C87AC91F8 /* Resources.h */,
 				0BDDDE25C8A74F9690FDF06F /* CASynthesis_Prefix.pch */,
 			);
