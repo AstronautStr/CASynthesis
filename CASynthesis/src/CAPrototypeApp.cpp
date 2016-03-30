@@ -73,7 +73,7 @@ void CAPrototypeApp::setup()
     mLifePower = 1.0;
     mTime = 0;
     mRuleRadius = 1;
-    mGridSize = 10;
+    mGridSize = 12;
     
     zoom = 1.0;
     selector = 0;
@@ -159,10 +159,10 @@ void CAPrototypeApp::shuffle()
     {
         for (int j = 0; j < mGridSize; ++j)
         {
-            float life = ((float)rand() / RAND_MAX) > 0.5 ? mLifePower : 0.0;
+            double life = ((double)rand() / RAND_MAX);
             mGrid[i][j]->setAmp(life);
-            mGrid[i][j]->setFreq(BASE_FREQ * (1 + rand() % HARMONIX_MAX));
-            //mGrid[i][j]->randFreq();
+            //mGrid[i][j]->setFreq(BASE_FREQ * (1 + rand() % HARMONIX_MAX));
+            mGrid[i][j]->randFreq();
         }
     }
 }
@@ -173,7 +173,8 @@ void CAPrototypeApp::clear()
         for (int j = 0; j < mGridSize; ++j)
         {
             mGrid[i][j]->setAmp(0.0);
-            mGrid[i][j]->setFreq(mGrid[0][0]->getFreq());
+            //mGrid[i][j]->setFreq(mGrid[0][0]->getFreq());
+            mGrid[i][j]->randFreq();
         }
     }
 }
@@ -187,6 +188,11 @@ void CAPrototypeApp::updateBase()
         }
     }
 }
+double randFreqLog(double min = 20.0, double max = 22000.0)
+{
+    return pow(2, log2(min) + ((double)rand() / RAND_MAX) * (log2(max) - log2(min)));
+}
+
 void CAPrototypeApp::applyStepRule()
 {
     for (int i = 0; i < mGridSize; ++i)
@@ -196,16 +202,25 @@ void CAPrototypeApp::applyStepRule()
             Cell* cell = mGrid[i][j];
             cell->resetNext();
             
-            const double lifePower = mLifePower;
+            //const double lifePower = mLifePower;
             
-            double harmAmp = 0.0;
-            double broAmp = 0.0;
+            //double harmAmp = 0.0;
+            //double broAmp = 0.0;
             
             // remember that this "- mLifePower" makes cells die each step if it have not bros"
-            const double noisePower = lifePower;
-            double nextAmp = cell->getAmp();// - noisePower;
+            //const double noisePower = lifePower;
+            //double nextAmp = cell->getAmp();// - noisePower;
             
-            double midFreq = cell->getFreq();
+            //double maxBroFreq = cell->getFreq();
+            //double maxBroValue = 0.0;
+            
+            double state = cell->getAmp();
+            if (state == 0.0)
+            {
+                cell->randFreq(true);
+            }
+            
+            double neighborsSum = 0.0;
             for (int ni = -mRuleRadius; ni <= mRuleRadius; ++ni)
             {
                 for (int nj = -mRuleRadius; nj <= mRuleRadius; ++nj)
@@ -214,13 +229,14 @@ void CAPrototypeApp::applyStepRule()
                         continue;
                     
                     Cell* bro = mGrid[cycledIndex(i + ni, mGridSize)][cycledIndex(j + nj, mGridSize)];
+                    neighborsSum += bro->getAmp();
                     
-                    if (bro->getFreq() == 0 || cell->getFreq() == 0)
+                    /*if (bro->getFreq() == 0 || cell->getFreq() == 0)
                         continue;
                     
-                    double currentBroAmp = bro->getAmp() > 0 ? 1.0 : 0.0;
+                    double currentBroAmp = bro->getAmp();// > 0 ? 1.0 : 0.0;
                     broAmp += currentBroAmp;
-                    midFreq += bro->getFreq() * currentBroAmp;
+                    //midFreq += bro->getFreq() * currentBroAmp;
                     
                     double diff = cinder::math<double>::max(bro->getFreq(), BASE_FREQ) / cinder::math<double>::min(bro->getFreq(), BASE_FREQ);
                     
@@ -228,17 +244,19 @@ void CAPrototypeApp::applyStepRule()
                     const int p = 1;
                     
                     double dE = 2 * (dmath::pow(2 * (K * diff - dmath::floor(K * diff) - 0.5), 2 * p) - 0.5);
-                    harmAmp += dE * currentBroAmp;//bro->getAmp() / cell->getAmp();
+                    double harm = dE * currentBroAmp;//bro->getAmp() / cell->getAmp();
+                    if (harm > maxBroValue)
+                    {
+                        maxBroValue = harm;
+                        maxBroFreq = bro->getFreq();
+                    }
+                     */
                 }
             }
-            
-            
-            std::cerr << harmAmp << " " << cell->getGridPosition().x << " " << cell->getGridPosition().y << std::endl;
-            
-            
+            /*
             if (!cell->isAlive())
             {
-                if (harmAmp > mRuleValues[2] && harmAmp < mRuleValues[3])
+                if (broAmp >  && broAmp < mRuleValues[3])
                 {
                     nextAmp += lifePower;
                     cell->setNextFreq(BASE_FREQ * ((1 + rand() % HARMONIX_MAX)) );
@@ -247,15 +265,33 @@ void CAPrototypeApp::applyStepRule()
             }
             else
             {
-                if (harmAmp < mRuleValues[0] || harmAmp > mRuleValues[1])
+                if (broAmp < mRuleValues[0] || broAmp > mRuleValues[1])
                 {
                     nextAmp -= lifePower;
                     cell->setNextFreq(BASE_FREQ * ((1 + rand() % HARMONIX_MAX)) );
                     //cell->randFreq(true);
                 }
             }
+            */
             
-            cell->setNextAmp(nextAmp);
+            double delta = -1.0;
+            const double rulesBirthCenter = 2.0;//1.9;
+            const double rulesBirthRadius = 0.37;//0.33;
+            const double rulesKeepCenter = 1.84;//1.9;
+            const double rulesKeepRadius = 0.35;//0.39;
+            const double rulesDelta = 0.07;//0.021;
+            
+            if (neighborsSum >= rulesBirthCenter - rulesBirthRadius && neighborsSum <= rulesBirthCenter + rulesBirthRadius)
+            {
+                delta = 1.0;
+            }
+            else if (neighborsSum >= rulesKeepCenter - rulesKeepRadius && neighborsSum <= rulesKeepCenter + rulesKeepRadius)
+            {
+                delta = 0.0;
+            }
+            double nextState = glm::clamp(state + delta * rulesDelta, 0.0, 1.0);
+            
+            cell->setNextAmp(nextState);
         }
     }
     
@@ -453,11 +489,11 @@ void CAPrototypeApp::draw()
             drawCell(mGrid[i][j]);
         }
     }
-    
+    /*
     for (int i = 0; i < RULE_VALUES_COUNT; ++i)
     {
         gl::drawString(toString(mRuleValues[i]), vec2(5, 5) + vec2(0 * i, 20 * i), ColorA(1.0, 1.0, 1.0, dmath::sin((0.25 + (i == selector ? 1.0 : 0.0) * timeline().getCurrentTime()) * 2 * M_PI)), mFont);
-    }
+    }*/
 }
 
 void CAPrototypeApp::drawCell(Cell* cell)

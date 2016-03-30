@@ -9,7 +9,7 @@
 #ifndef Defines_h
 #define Defines_h
 
-#define STEP_TIME 0.75
+#define STEP_TIME 0.05
 #define ATTACK_TIME STEP_TIME
 #define BASE_FREQ 50.0
 #define HARMONIX_MAX 10

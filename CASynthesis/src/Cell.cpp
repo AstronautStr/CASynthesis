@@ -40,7 +40,7 @@ Color CellPresentation::getColor()
 {
     if (mHost != NULL)
     {
-        float amp = 0.5 * (mHost->getAmp() > 0 ? 1.0 : 0.0);
+        float amp = mHost->getAmp();//0.5 * (mHost->getAmp() > 0 ? 1.0 : 0.0);
         return Color(amp, amp, amp);
     }
     else
@@ -153,7 +153,7 @@ void Cell::setNextAmp(double amp)
 
 void Cell::randFreq(bool next, float lowest, float highest)
 {
-    double freq = pow(2.0, (log2(lowest) + (log2(highest) - log2(lowest)) * ((float)rand() / RAND_MAX)));
+    double freq = pow(2.0, (log2(lowest) + (log2(highest) - log2(lowest)) * ((double)rand() / RAND_MAX)));
     if (next)
         setNextFreq(freq);
     else
