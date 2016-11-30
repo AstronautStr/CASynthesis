@@ -115,7 +115,7 @@ void Cell::setNextAmp(double amp)
 
 void Cell::randFreq(bool next, float lowest, float highest)
 {
-    double freq = pow(2.0, (log2(lowest) + (log2(highest) - log2(lowest)) * ((float)rand() / RAND_MAX)));
+    float freq = pow(2.0, (log2(lowest) + (log2(highest) - log2(lowest)) * ((float)rand() / RAND_MAX)));
     if (next)
         setNextFreq(freq);
     else
